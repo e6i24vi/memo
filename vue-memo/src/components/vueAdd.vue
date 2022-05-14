@@ -1,34 +1,33 @@
 <template>
- <div>
+  <div>
     <form @submit.prevent="createMemo">
-        <label>タイトル</label>
-        <input v-model="memo.title">
-        <label>内容</label>
-        <input v-model="memo.content">
-        <button href="/">追加</button>
+      <label>タイトル</label>
+      <input v-model="memo.title" />
+      <label>内容</label>
+      <input v-model="memo.content" />
+      <button href="/">追加</button>
     </form>
- </div>
+  </div>
 </template>
 <script>
-
-import memosCoRef from '@/firebase'
-import {addDoc} from "firebase/firestore"
+import memosCoRef from "@/firebase";
+import { addDoc } from "firebase/firestore";
 
 export default {
-    name:"vueAdd",
-    data(){
-        return{
-            memo:{
-                title:null,
-                 content:null
-                }
-        }
+  name: "vueAdd",
+  data() {
+    return {
+      memo: {
+        title: null,
+        content: null,
+      },
+    };
+  },
+  methods: {
+    async createMemo() {
+      await addDoc(memosCoRef, this.memo);
+      this.$router.push("/");
     },
-    methods:{
-        async createMemo(){
-            await addDoc(memosCoRef,this.memo)
-            this.$router.push("/");    
-        },
-    }
-}
+  },
+};
 </script>
