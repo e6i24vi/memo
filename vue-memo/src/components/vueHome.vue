@@ -8,7 +8,6 @@
       </li>
     </ul>
     <router-link :to="{ path: '/add' }" exact>+</router-link>
-    <router-view></router-view>
   </div>
 </template>
 
@@ -29,7 +28,7 @@ export default {
   },
   methods: {
     async fetchMemos() {
-      let memosSnapShot = await getDocs(memosCoRef);
+      const memosSnapShot = await getDocs(memosCoRef);
       this.memos = memosSnapShot.docs.map((memo) => {
         return {
           id: memo.id,
