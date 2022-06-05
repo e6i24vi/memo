@@ -35,6 +35,11 @@ export default {
       },
     };
   },
+  beforeRouteUpdate(to, from, next) {
+    this.memoId = to.params.id;
+    this.getMemo();
+    next();
+  },
   methods: {
     async getMemo() {
       this.docRef = doc(memosCoRef, this.memoId);
@@ -42,14 +47,15 @@ export default {
       this.memoInfo = memo.data();
     },
     async updateMemo() {
+      this.$router.push("/");
       await setDoc(this.docRef, this.memoInfo);
       alert(`The memo with ID of ${this.memoId} has been updated successfully`);
-      this.$router.push("/");
+      location.reload();
     },
     async deleteMemo() {
+      this.$router.push("/");
       await deleteDoc(doc(memosCoRef, this.memoId));
       alert(`The memo deleted successfully`);
-      this.$router.push("/");
     },
   },
   created() {

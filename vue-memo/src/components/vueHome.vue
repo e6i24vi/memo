@@ -21,10 +21,11 @@ export default {
       memos: [],
     };
   },
-  watch: {
-    $route: function () {
-      this.$router.go({ path: this.$router.currentRoute.path, force: true });
-    },
+  beforeRouteLeave(to, from, next) {
+    if (to.fullPath === "/") {
+      this.fetchMemos();
+    }
+    next();
   },
   methods: {
     async fetchMemos() {
