@@ -18,25 +18,21 @@
         <button type="submit" @click="deleteMemo">削除</button>
     </div>
 </template>
-
 <script>
 import memosCoRef from "../firebase";
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
-import { mapGetters } from "vuex";
 export default {
-    name: "vueEdit",
+    props: ["memo"],
     data() {
         return {
-            memoId: null,
-            docRef: null,
             memoInfo: {
-                title: this.getMemoById(this.$route.params.id),
-                content: "",
+                title: this.memo.title,
+                content: this.memo.content,
             },
         };
     },
-    computed: mapGetters(["getMemos", "getMemoById"]),
     methods: {
+        getMemo() {},
         async updateMemo() {
             this.$router.push("/");
             await setDoc(this.docRef, this.memoInfo);
@@ -50,17 +46,6 @@ export default {
             await deleteDoc(doc(memosCoRef, this.memoId));
             alert(`The memo deleted successfully`);
         },
-    },
-
-    beforeRouteUpdate(to, from, next) {
-        this.memoId = to.params.id;
-        this.getMemo();
-        next();
-    },
-
-    created() {
-        //const event = this.$store.getters.getMemoById(id);
-        //console.log(event);
     },
 };
 </script>
