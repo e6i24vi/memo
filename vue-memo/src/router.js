@@ -1,6 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
 import vueHome from "./components/vueHome";
-import vueEdit from "./components/vueEdit";
 import vueAdd from "./components/vueAdd";
 const routes = [
     {
@@ -11,18 +10,13 @@ const routes = [
     {
         path: "/edit/:id",
         name: "Edit",
-        components: {
-            default: vueHome,
-            sub01: vueEdit,
-        },
+        component: () => import("./components/vueEdit.vue"),
+        props: true,
     },
     {
         path: "/add",
         name: "Add",
-        components: {
-            default: vueHome,
-            sub01: vueAdd,
-        },
+        component: vueAdd,
     },
 ];
 

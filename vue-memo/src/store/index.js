@@ -3,22 +3,21 @@ import memosCoRef from "../firebase";
 import { getDocs } from "firebase/firestore";
 
 const state = {
-    memos: null,
-    num: 0,
+    memos: [],
 };
 const getters = {
     getMemos(state) {
         return state.memos;
     },
-    getAddNum(state) {
-        return state.num++;
-    },
-    getMemoById({ state }, id) {
-        console.log(state.memos);
 
-        return state.memos.find((memo) => memo.id === id);
+    getMemoById: (state) => (id) => {
+        if (state.memos === undefined) {
+            return null;
+        } else {
+            return state.memos.find((memo) => memo.id === id);
+        }
     },
-    getIdById({ state }, id) {
+    getIdById: (state) => (id) => {
         return state.memos.findIndex((memo) => memo.id === id);
     },
 };
@@ -26,20 +25,20 @@ const mutations = {
     setMemos(state, memos) {
         state.memos = memos;
     },
-    countNum(state) {
-        return state.num;
-    },
-    countClear(state) {
-        state.num = 0;
-    },
     addMemos(state, memo) {
         state.memos.push(memo);
+    },
+    setMemo(state, memo) {
+        state.memos[memo.index] = {
+            id: memo.id,
+            title: memo.memoInfo.title,
+            content: memo.memoInfo.content,
+        };
     },
 };
 
 const actions = {
-    fetchMemos: ({ commit, state }) => {
-        commit("countClear");
+    fetchMemos: ({ commit }) => {
         getDocs(memosCoRef).then((res) => {
             const memos = res.docs.map((memo) => {
                 return {
@@ -49,9 +48,6 @@ const actions = {
                 };
             });
             commit("setMemos", memos);
-            console.log(memos);
-            console.log(state.memos);
-            console.log(typeof state.memos);
         });
     },
 };

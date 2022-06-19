@@ -1,7 +1,22 @@
 <template>
     <div>
+        <vueLists :memos="getMemos" />
         <router-view></router-view>
-        <router-view name="sub01"></router-view>
     </div>
 </template>
-<script></script>
+
+<script>
+import { mapGetters } from "vuex";
+import vueLists from "./components/vueLists.vue";
+
+export default {
+    name: "App",
+    components: {
+        vueLists,
+    },
+    computed: mapGetters(["getMemos"]),
+    created() {
+        this.$store.dispatch("fetchMemos");
+    },
+};
+</script>
