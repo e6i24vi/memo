@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
-import memosCoRef from "../firebase";
-import { getDocs } from "firebase/firestore";
+import memosCoRef from "@/firebase";
+import { getDoc, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore";
 
 const state = {
     memos: [],
@@ -9,7 +9,6 @@ const getters = {
     getMemos(state) {
         return state.memos;
     },
-
     getMemoById: (state) => (id) => {
         if (state.memos === undefined) {
             return null;
@@ -48,6 +47,34 @@ const actions = {
                 };
             });
             commit("setMemos", memos);
+        });
+    },
+    async getMemo(_, Id) {
+        const docRef = doc(memosCoRef, Id);
+        const ret = await getDoc(docRef);
+        return ret;
+    },
+    updateMemo({ commit, getters }, memo) {
+        const docRef = doc(memosCoRef, memo.Id);
+        setDoc(docRef, memo.memoInfo).then(() => {
+            const index = getters.getIdById(memo.Id);
+            commit("setMemo", {
+                index: index,
+                memoInfo: memo.memoInfo,
+                id: memo.Id,
+            });
+            alert(
+                `The memo with ID of ${this.memoId} has been updated successfully`
+            );
+        });
+    },
+    deleteMemo({ commit, getters }, Id) {
+        deleteDoc(doc(memosCoRef, Id)).then(() => {
+            commit(
+                "setMemos",
+                getters.getMemos.filter((memo) => memo.id !== Id)
+            );
+            alert(`The memo deleted successfully`);
         });
     },
 };
